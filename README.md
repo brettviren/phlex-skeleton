@@ -72,10 +72,17 @@ cmake --build build
 This produces `build/libcounter.so`, `build/libsquarer.so` and
 `build/libchirp.so`.
 
-> **Note.** The `CMakeLists.txt` calls `find_package(Boost COMPONENTS json)`,
-> `TBB`, `spdlog` and `fmt` *before* `find_package(phlex)`.  That ordering is a
-> required workaround because Phlex's exported CMake config does not pull in its
-> own transitive dependencies; without it CMake errors with "target not found".
+> **Note.** This package needs Phlex **0.4.1 or newer**
+> (`find_package(phlex 0.4.1 REQUIRED)`).  From 0.4.1 on, Phlex's CMake config
+> finds its own dependencies (Boost, TBB, fmt, spdlog, GSL), so
+> `find_package(phlex)` is the only line needed.
+
+To check that everything works, run the bundled test, which runs the example
+below and checks its output:
+
+```bash
+ctest --test-dir build --output-on-failure
+```
 
 ## Running
 
@@ -105,6 +112,11 @@ chirp: 9
 chirp: 16
 chirp: 25
 ```
+
+Every job must name its **stage** (a label for this processing step that
+Phlex stamps on each product).  `config/skeleton.jsonnet` sets `stage:
+'skeleton'`; you can override it with `phlex --stage <name> -c ...`.  Without
+a stage Phlex stops with "No stage name was specified".
 
 Change `total: 5` in `config/skeleton.jsonnet` to run more or fewer events —
 the event count lives in the config's driver, not on the command line.

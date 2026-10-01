@@ -1,2 +1,7 @@
 # out-of-source build directory
 /build/
+
+# The global gitignore of some developers ignores *.txt/*.json; never ignore
+# the build files.
+!CMakeLists.txt
+!CMakePresets.json
